@@ -773,7 +773,7 @@ class SynciqPolicy(object):
                              'source_include_directories', 'source_exclude_directories',
                              'target_host', 'target_path', 'target_certificate_id', 'target_snapshot_archive',
                              'target_snapshot_expiration', 'snapshot_sync_pattern', 'accelerated_failback',
-                             'restrict_target_network'
+                             'restrict_target_network', 'target_password'
                              ]
 
         for param in input_param:
@@ -1042,7 +1042,8 @@ def get_synciqpolicy_parameters():
         target_cluster=dict(type='dict', options=dict(target_host=dict(type='str', no_log=True),
                                                       target_path=dict(type='str', no_log=True),
                                                       target_certificate_id=dict(type='str'),
-                                                      target_certificate_name=dict(type='str')),
+                                                      target_certificate_name=dict(type='str'),
+                                                      target_password=dict(type='str', no_log=True)),
                             mutually_exclusive=[['target_certificate_id', 'target_certificate_name']]),
         target_snapshot=dict(type='dict', options=dict(target_snapshot_archive=dict(type='bool'),
                                                        target_snapshot_expiration=dict(type='int'),

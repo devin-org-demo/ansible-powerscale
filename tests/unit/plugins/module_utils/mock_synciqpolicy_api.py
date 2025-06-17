@@ -50,7 +50,8 @@ class MockSynciqpolicyApi:
         "target_cluster": {
             "target_host": "xx.xx.xx.xx",
             "target_path": "/test/system",
-            "target_certificate_id": "xxxxxxx"
+            "target_certificate_id": "xxxxxxx",
+            "target_password": "test_password"
         },
         "target_snapshot": {
             "target_snapshot_archive": True,

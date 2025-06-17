@@ -167,6 +167,10 @@ Parameters
       This parameter is not supported by isi\_sdk\_8\_1\_1
 
 
+    target_password (optional, str, None)
+      The password to use for authentication with the target cluster.
+
+
 
   target_snapshot (optional, dict, None)
     Details of snapshots to be created at the target.

@@ -331,3 +331,41 @@ class TestSynciqPolicy(PowerScaleUnitBase):
             side_effect=Exception("Test exception"))
         self.capture_fail_json_method("Please provide a valid certificate",
                                       self.powerscale_module_mock, "get_synciq_policy_display_attributes", policy_obj)
+
+    def test_create_synciqpolicy_with_target_password(self):
+        """Test that target_password is accepted and included in policy payload"""
+        create_args_with_password = MockSynciqApi.MockSynciqpolicyApi.CREATE_ARGS.copy()
+        create_args_with_password["target_cluster"]["target_password"] = "test_password"
+        
+        self.set_module_params(self.synciqpolicy_args, create_args_with_password)
+        self.powerscale_module_mock.get_target_cert_id_name = MagicMock(
+            return_value=MockSynciqApi.MockSynciqpolicyApi.CERT_NAME
+        )
+        self.powerscale_module_mock.get_synciq_policy_details = MagicMock(
+            return_value=(None, False))
+        
+        mock_create_policy = MagicMock()
+        self.powerscale_module_mock.api_instance.create_sync_policy = mock_create_policy
+        
+        SynciqPolicyHandler().handle(self.powerscale_module_mock,
+                                     self.powerscale_module_mock.module.params)
+        
+        assert mock_create_policy.called
+        
+        call_args = mock_create_policy.call_args[0][0]
+        
+        assert hasattr(call_args, 'target_password')
+        assert call_args.target_password == "test_password"
+        
+        assert self.powerscale_module_mock.module.exit_json.call_args[1]["changed"] is True
+
+    def test_target_password_parameter_security(self):
+        """Test that target_password parameter has no_log=True for security"""
+        from ansible_collections.dellemc.powerscale.plugins.modules.synciqpolicy import get_synciqpolicy_parameters
+        
+        params = get_synciqpolicy_parameters()
+        target_cluster_options = params['target_cluster']['options']
+        
+        assert 'target_password' in target_cluster_options
+        assert target_cluster_options['target_password']['no_log'] is True
+        assert target_cluster_options['target_password']['type'] == 'str'
