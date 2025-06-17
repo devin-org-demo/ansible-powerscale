@@ -179,6 +179,11 @@ options:
             - Parameters I(target_certficate_name) and I(target_certificate_id) are mutually exclusive
             - This parameter is not supported by isi_sdk_8_1_1
             type: str
+        password:
+            description:
+            - Password for secure authentication with the target cluster
+            - Used for secure PowerScale peering and replication processes
+            type: str
   target_snapshot:
     description:
     - Details of snapshots to be created at the target.
@@ -771,7 +776,7 @@ class SynciqPolicy(object):
         policy_param_keys = ['description', 'enabled', 'action', 'skip_when_source_unmodified',
                              'source_root_path', 'source_network',
                              'source_include_directories', 'source_exclude_directories',
-                             'target_host', 'target_path', 'target_certificate_id', 'target_snapshot_archive',
+                             'target_host', 'target_path', 'target_certificate_id', 'password', 'target_snapshot_archive',
                              'target_snapshot_expiration', 'snapshot_sync_pattern', 'accelerated_failback',
                              'restrict_target_network'
                              ]
@@ -1042,7 +1047,8 @@ def get_synciqpolicy_parameters():
         target_cluster=dict(type='dict', options=dict(target_host=dict(type='str', no_log=True),
                                                       target_path=dict(type='str', no_log=True),
                                                       target_certificate_id=dict(type='str'),
-                                                      target_certificate_name=dict(type='str')),
+                                                      target_certificate_name=dict(type='str'),
+                                                      password=dict(type='str', no_log=True)),
                             mutually_exclusive=[['target_certificate_id', 'target_certificate_name']]),
         target_snapshot=dict(type='dict', options=dict(target_snapshot_archive=dict(type='bool'),
                                                        target_snapshot_expiration=dict(type='int'),
